@@ -36,10 +36,9 @@ class HomeAPIController extends Controller
                       
             foreach ($request->filenames as $key => $value) {
                 # code...
-                $foto = $request->file('documents')[$key];
-                $imageName = $request->filenames[$key];       
-                $foto->move(public_path('uploaded_docs'), $imageName);
-                array_push($listPath, 'uploaded_docs/'.$imageName);
+                File::put(public_path('uploaded_docs'). '/' . str_replace(' ', '', $value), base64_decode($request->documents[$key]));
+                
+                array_push($listPath, 'uploaded_docs/'.str_replace(' ', '', $value));
             }
 
             return response()->json(["status" => "success", "message" => "Success upload !", "path" => $listPath], 201);
@@ -107,14 +106,16 @@ class HomeAPIController extends Controller
             // dd($request->path);
             foreach ($request->path as $key => $value) {
                 # code...
-                // $files = public_path($request->path[$key]);
-                return response()->download(public_path($request->path[$key]));
+                
+                $file = "data:application/pdf;base64,".base64_encode(file_get_contents(public_path($request->path[$key])));
+                // return response()->download(public_path($request->path[$key]));
+                array_push($listFile, $file);
             }
-
+            return response()->json(["status" => "success","documents" => $listFile, "message" => "Successfully download document!"], 200);
             
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(["status" => "error", "message" => $th->getMessage()]);
+            return response()->json(["status" => "error", "message" => $th->getMessage()], 400);
         }
     }
 
@@ -136,20 +137,22 @@ class HomeAPIController extends Controller
         try {
             //code...
             $listFile = array();
-            // dd($request->path);
-            foreach ($request->path as $key => $value) {
-                if(file_exists(public_path($request->path[$key]))){
-                    array_push($listFile, true);
-                } else {
-                    array_push($listFile, false);
-                }               
+            
+            
+            foreach ($request->path as $key => $value) {                
+                array_push($listFile, file_exists(public_path("uploaded_docs/InvoiceExample3copy2-1694521356259.pdf")));                           
+                // array_push($listFile, Storage::disk('public')->exists($request->path[$key]));                
+                // array_push($listFile, file_exists(public_path($request->path[$key])));
+                
             }
+            dd(strtok($request->path[0], '/'));
+            // dd(Storage::disk('public')->files('uploaded_docs/InvoiceExample3copy2-1694521356259.pdf'));
 
             return response()->json(["status" => "success", "message" => "Success Check !", "document_status" => $listFile], 201);
             
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(["status" => "error", "message" => $th->getMessage()]);
+            return response()->json(["status" => "error", "message" => $th->getMessage()], 400);
         }
     }
 
@@ -176,7 +179,7 @@ class HomeAPIController extends Controller
                 if(file_exists(public_path($request->path[$key]))){
                     File::delete(public_path($request->path[$key]));
                 } else {
-                    return response()->json(["status" => "error", "message" => "File Not Found"]);
+                    return response()->json(["status" => "error", "message" => "File Not Found"], 400);
                 }             
             }
 
@@ -184,7 +187,7 @@ class HomeAPIController extends Controller
             
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(["status" => "error", "message" => $th->getMessage()]);
+            return response()->json(["status" => "error", "message" => $th->getMessage()], 400);
         }
     }
 
