@@ -14,7 +14,7 @@ class HomeAPIController extends Controller
     //
     public function documents(Request $request){
 
-        if(!$request->header('x-api-key') || $request->header('x-api-key') != '06da6102-4598-4b4e-8980-5360bd6dbd49'){
+        if(!$request->header('x-api-key') || $request->header('x-api-key') != env('X_API_KEY')){
             return response()->json(["status" => "error", "message" => "Request Unauthorized !"], 401);  
         }
 
@@ -50,7 +50,7 @@ class HomeAPIController extends Controller
     }
 
     public function stampedDocument(Request $request){
-        if(!$request->header('x-api-key') || $request->header('x-api-key') != '06da6102-4598-4b4e-8980-5360bd6dbd49'){
+        if(!$request->header('x-api-key') || $request->header('x-api-key') != env('X_API_KEY')){
             return response()->json(["status" => "error", "message" => "Request Unauthorized !"], 401);  
         }
 
@@ -86,7 +86,7 @@ class HomeAPIController extends Controller
     }
 
     public function downloadDocuments(Request $request){
-        if(!$request->header('x-api-key') || $request->header('x-api-key') != '06da6102-4598-4b4e-8980-5360bd6dbd49'){
+        if(!$request->header('x-api-key') || $request->header('x-api-key') != env('X_API_KEY')){
             return response()->json(["status" => "error", "message" => "Request Unauthorized !"], 401);  
         }
 
@@ -120,7 +120,7 @@ class HomeAPIController extends Controller
     }
 
     public function checkDocuments(Request $request){
-        if(!$request->header('x-api-key') || $request->header('x-api-key') != '06da6102-4598-4b4e-8980-5360bd6dbd49'){
+        if(!$request->header('x-api-key') || $request->header('x-api-key') != env('X_API_KEY')){
             return response()->json(["status" => "error", "message" => "Request Unauthorized !"], 401);  
         }
 
@@ -157,7 +157,7 @@ class HomeAPIController extends Controller
     }
 
     public function deleteDocuments(Request $request){
-        if(!$request->header('x-api-key') || $request->header('x-api-key') != '06da6102-4598-4b4e-8980-5360bd6dbd49'){
+        if(!$request->header('x-api-key') || $request->header('x-api-key') != env('X_API_KEY')){
             return response()->json(["status" => "error", "message" => "Request Unauthorized !"], 401);  
         }
 
